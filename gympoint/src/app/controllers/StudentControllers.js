@@ -84,36 +84,29 @@ class StudentController {
     return res.json({ id, name, age, weight, height });
   }
 
-  // TODO Corrigir o metodo DELETE
   async delete(req, res) {
-    const schema = Yup.object().shape({
-      email: Yup.string()
-        .email()
-        .required(),
-    });
-
-    const { email } = req.body;
     const { id } = req.params;
 
-    if (!(await schema.isValid(email))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
-    const studentExists = await Student.findOne({ where: { email, id } });
+    const studentExists = await Student.findOne({ where: { id } });
 
     if (!studentExists) {
-      return res.status(404).json({ error: 'This email does not exist.' });
+      return res.status(404).json({ error: 'This ID does not exist.' });
     }
 
-    console.log(studentExists.destroy());
+    studentExists.destroy();
 
-    return res
-      .status(200)
-      .json({ message: `Student ${email} deleted with success!` });
+    return res.status(200).json({
+      message: `Student ${studentExists.email} deleted with success!`,
+    });
   }
 
   async retrieve(req, res) {
     const studentID = req.params.id;
+
+    if (!studentID) {
+      const students = await Student.findAll();
+      return res.status(200).json(students);
+    }
 
     const student = await Student.findByPk(studentID);
 
@@ -122,20 +115,6 @@ class StudentController {
     }
 
     const { id, name, email, age, weight, height } = student;
-
-    return res.json({ id, name, email, age, weight, height });
-  }
-
-  async retrieveIDByMail(req, res) {
-    const { email } = req.body;
-
-    const student = await Student.findOne({ where: { email } });
-
-    if (!student) {
-      return res.status(404).json({ error: 'This student does not exists.' });
-    }
-
-    const { id, name, age, weight, height } = student;
 
     return res.json({ id, name, email, age, weight, height });
   }

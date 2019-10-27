@@ -50,7 +50,9 @@ class UserController {
 
     const { email, oldPassword } = req.body;
 
-    const user = await User.findByPk(req.userId);
+    // FIXME colocar o middleware para returnar o ID na req
+    // const user = await User.findByPk(req.userId);
+    const user = await User.findByPk(req.body.userID);
 
     if (email !== user.email) {
       const userExists = await User.findOne({ where: { email } });
@@ -64,11 +66,9 @@ class UserController {
       return res.status(401).json({ error: 'Password does not match.' });
     }
 
-    const { id, name, provider } = await user.update(req.body);
-    console.log(
-      `id: ${id}, name: ${name}, email: ${email},provider:${provider} `
-    );
-    return res.json({ id, name, email, provider });
+    const { id, name } = await user.update(req.body);
+
+    return res.json({ id, name, email });
   }
 }
 export default new UserController();
