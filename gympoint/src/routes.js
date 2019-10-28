@@ -11,11 +11,15 @@ import StudentControllers from './app/controllers/StudentControllers';
 const routes = new Router();
 
 routes.post('/sessions', SessionController.store);
-routes.put('/users', UserController.update);
 
 // Este middleare global só funciona para as rotas que estiverem a baixo dele.
-// routes.use(authMiddleware);
+routes.use(authMiddleware);
 
+// USERS!
+routes.put('/users', UserController.update);
+routes.post('/users', UserController.store);
+
+// STUDENTS
 // Create
 routes.post('/students', StudentControllers.store);
 
@@ -23,10 +27,10 @@ routes.post('/students', StudentControllers.store);
 routes.put('/students/:id', StudentControllers.update);
 
 // Get student by ID
-routes.get('/students/:id', StudentControllers.retrieve);
+routes.get('/students/:id', StudentControllers.show);
 
 // Get all students
-routes.get('/students', StudentControllers.retrieve);
+routes.get('/students', StudentControllers.show);
 
 // Delete by id
 routes.delete('/students/:id', StudentControllers.delete);

@@ -25,8 +25,8 @@ class UserController {
         .json({ error: `User ${req.body.email} already exists.` });
     }
 
-    const { id, name, email, provider } = await User.create(req.body);
-    return res.json({ id, name, email, provider });
+    const { id, name, email } = await User.create(req.body);
+    return res.json({ id, name, email });
   }
 
   async update(req, res) {
@@ -50,9 +50,7 @@ class UserController {
 
     const { email, oldPassword } = req.body;
 
-    // FIXME colocar o middleware para returnar o ID na req
-    // const user = await User.findByPk(req.userId);
-    const user = await User.findByPk(req.body.userID);
+    const user = await User.findByPk(req.userID);
 
     if (email !== user.email) {
       const userExists = await User.findOne({ where: { email } });

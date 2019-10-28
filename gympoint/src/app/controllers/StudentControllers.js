@@ -100,7 +100,7 @@ class StudentController {
     });
   }
 
-  async retrieve(req, res) {
+  async show(req, res) {
     const studentID = req.params.id;
 
     if (!studentID) {
